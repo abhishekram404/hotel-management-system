@@ -1,0 +1,12 @@
+@import "./global.scss";
+
+.navbar {
+  .navbar-brand {
+    color: $primaryColor;
+  }
+  .nav {
+    .nav-item {
+      cursor: pointer;
+    }
+  }
+}
