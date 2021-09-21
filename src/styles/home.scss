@@ -1,0 +1,53 @@
+@import "./global.scss";
+
+.home {
+  //   position: absolute;
+  min-height: 100vh;
+  .first-page {
+    height: 100vh;
+    position: relative;
+    .content {
+      z-index: 1000;
+      height: 100%;
+      background: url("../assets/homepage-bg.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      //   position: relative;
+    }
+  }
+  .layer {
+    position: absolute;
+    z-index: 100;
+    padding: 40px;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(
+      to right,
+      rgba(#000, 0.9),
+      rgba(#000, 0.7),
+      rgba(#000, 0.3)
+    );
+
+    display: grid;
+    grid-template-columns: 50% 50%;
+    align-items: center;
+    // align-items: center;
+    .wrapper {
+      .quote {
+        color: #eee;
+        font-family: "Montserrat", sans-serif;
+        font-size: 3.5rem;
+      }
+      .paragraph {
+        color: #ddd;
+        font-family: "Space Mono", sans-serif;
+      }
+      #book-now {
+        // background-color: ;
+        color: #fff;
+      }
+    }
+  }
+}
