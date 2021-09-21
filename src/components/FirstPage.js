@@ -11,9 +11,13 @@ export default function FirstPage() {
             <p className="paragraph">
               Grab a place for some exquisite fun in your favorite cities.{" "}
             </p>
-            <button className="btn btn-danger px-3 py-2" id="book-now">
+            <a
+              href="#second-page"
+              className="btn btn-danger px-3 py-2"
+              id="book-now"
+            >
               Book now
-            </button>
+            </a>
           </div>
         </div>
       </div>

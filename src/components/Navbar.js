@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/navbar.scss";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import { AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
 export default function Navbar() {
   return (
@@ -18,6 +19,11 @@ export default function Navbar() {
         <Link className="nav-item text-light mx-3" to="/contact">
           Contact
         </Link>
+        <Link className="nav-item text-light mx-3" to="/admin">
+          Admin&nbsp;
+          <AiOutlineUser />
+        </Link>
+
         <Link className="nav-item text-light mx-3" to="/login">
           Logout &nbsp;
           <RiLogoutCircleRLine />
