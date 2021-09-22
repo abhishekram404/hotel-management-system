@@ -3,8 +3,9 @@ import "../styles/sidebar.scss";
 import "../styles/admin.scss";
 import Dashboard from "./Dashboard";
 import { AiOutlineDownCircle } from "react-icons/ai";
+import clsx from "clsx";
 export default function Admin() {
-  const [activeForm, setActiveForm] = useState({ component: "" });
+  const [activeForm, setActiveForm] = useState({ component: Dashboard });
   return (
     <div className="admin">
       <div className="sidebar p-3">
@@ -12,35 +13,50 @@ export default function Admin() {
         <hr />
         <div className="options w-75">
           <div
-            className="option"
+            className={clsx(
+              "option",
+              activeForm.component == Dashboard && "active"
+            )}
             onClick={() => setActiveForm({ component: Dashboard })}
           >
             Dashboard
           </div>
           <hr />
           <div
-            className="option"
+            className={clsx(
+              "option",
+              activeForm.component == AddARoom && "active"
+            )}
             onClick={() => setActiveForm({ component: AddARoom })}
           >
             Add a room
           </div>
           <hr />
           <div
-            className="option"
+            className={clsx(
+              "option",
+              activeForm.component == CheckIn && "active"
+            )}
             onClick={() => setActiveForm({ component: CheckIn })}
           >
             Check In
           </div>
           <hr />
           <div
-            className="option"
+            className={clsx(
+              "option",
+              activeForm.component == CheckOut && "active"
+            )}
             onClick={() => setActiveForm({ component: CheckOut })}
           >
             Check Out
           </div>
           <hr />
           <div
-            className="option"
+            className={clsx(
+              "option",
+              activeForm.component == AddEmployee && "active"
+            )}
             onClick={() => setActiveForm({ component: AddEmployee })}
           >
             Add Employee
@@ -364,8 +380,111 @@ const CheckOut = () => {
 };
 const AddEmployee = () => {
   return (
-    <div className="add-employee">
+    <div className="admin-form add-employee">
       <h1>Add Employee</h1>
+      <hr />
+      <form action="">
+        <div className="mb-3">
+          <label htmlFor="employee-name" className="form-label">
+            Employee Name
+          </label>
+          <input type="text" id="employee-name" className="form-control" />
+        </div>
+        <div className="row mb-3">
+          <div className="col">
+            <label htmlFor="father-name" className="form-label">
+              Father's Name
+            </label>
+            <input type="text" id="father-name" className="form-control" />
+          </div>
+          <div className="col">
+            <label htmlFor="mother-name" className="form-label">
+              Mother's Name
+            </label>
+            <input type="text" id="mother-name" className="form-control" />
+          </div>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="phone" className="form-label">
+            Phone
+          </label>
+          <input type="number" id="phone" className="form-control" />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <input type="email" id="email" className="form-control" />
+        </div>
+        <div className="row mb-3">
+          <div className="col">
+            <label htmlFor="address-perm" className="form-label">
+              Permanent Address
+            </label>
+            <input type="text" id="address-perm" className="form-control" />
+          </div>
+          <div className="col">
+            <label htmlFor="address-current" className="form-label">
+              Current Address
+            </label>
+            <input type="text" id="address-current" className="form-control" />
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <div className="row">
+            <div className="col">
+              <label htmlFor="dob" className="form-label">
+                Date of Birth
+              </label>
+              <input type="date" className="form-control" />
+            </div>
+            <div className="col">
+              <label htmlFor="national-id-no" className="form-label">
+                National ID no.
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                id="national-id-no"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Gender</label>
+          {/* <div className="row"> */}
+          <div className="form-check">
+            <label htmlFor="male" className="form-check-label">
+              Male
+            </label>
+            <input
+              type="radio"
+              name="gender"
+              id="male"
+              className="form-check-input"
+            />
+          </div>
+          <div className="form-check">
+            <label htmlFor="female" className="form-check-label">
+              Female
+            </label>
+            <input
+              type="radio"
+              name="gender"
+              id="female"
+              className="form-check-input"
+            />
+          </div>
+          {/* </div> */}
+        </div>
+
+        <div className="mb-3">
+          <button type="submit" className="btn btn-primary float-end">
+            Add employee
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
