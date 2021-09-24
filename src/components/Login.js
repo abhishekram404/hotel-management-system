@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/login.scss";
+import { Link } from "react-router-dom";
 export default function Login() {
   return (
     <div className="login  mx-auto p-4">
@@ -30,12 +31,7 @@ export default function Login() {
                 id="exampleInputPassword1"
               />
             </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="rememberMe" />
-              <label class="form-check-label" for="rememberMe">
-                Remember Me
-              </label>
-            </div>
+
             <button type="submit" class="btn btn-primary" id="login-btn">
               Login
             </button>
@@ -63,17 +59,16 @@ export default function Login() {
                 id="exampleInputPassword1"
               />
             </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="rememberMe" />
-              <label class="form-check-label" for="rememberMe">
-                Remember Me
-              </label>
-            </div>
+
             <button type="submit" class="btn btn-primary" id="login-btn">
               Login
             </button>
           </form>
         </div>
+        <hr />
+        <h6 className="text-center">
+          Not a customer yet ? <Link to="/register">Become one here</Link>
+        </h6>
       </div>
     </div>
   );
