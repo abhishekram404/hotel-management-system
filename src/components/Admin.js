@@ -85,7 +85,7 @@ const AddARoom = () => {
         </div>
         <div className="mb-3">
           <label htmlFor="unit" className="form-label">
-            Unit
+            Capacity
           </label>
           <input type="number" className="form-control" id="unit" />
         </div>
@@ -174,6 +174,18 @@ const CheckIn = () => {
               <input type="text" id="country" className="form-control" />
             </div>
             <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <input type="email" id="email" className="form-control" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="phone" className="form-label">
+                Phone
+              </label>
+              <input type="number" id="phone" className="form-control" />
+            </div>
+            <div className="mb-3">
               <label htmlFor="company" className="form-label">
                 Company
               </label>
@@ -192,7 +204,7 @@ const CheckIn = () => {
         className="card p-3  identification-information"
         onSubmit={(e) => {
           e.preventDefault();
-          setVehicleExpanded(true);
+          setRateExpanded(true);
         }}
       >
         <div
@@ -233,7 +245,7 @@ const CheckIn = () => {
         )}
       </form>
 
-      <br />
+      {/* <br />
       <form
         className="card p-3  vehicle-information"
         onSubmit={(e) => {
@@ -284,7 +296,7 @@ const CheckIn = () => {
             </div>
           </>
         )}
-      </form>
+      </form> */}
 
       <br />
       <form
