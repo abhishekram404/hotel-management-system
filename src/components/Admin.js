@@ -8,7 +8,7 @@ import { send_room_add_request } from "../redux/actions/roomActions";
 import clsx from "clsx";
 export default function Admin() {
   const dispatch = useDispatch();
-  const [activeForm, setActiveForm] = useState({ component: Dashboard });
+  const [activeForm, setActiveForm] = useState({ component: CheckOut });
   return (
     <div className="admin">
       <div className="sidebar p-3">
@@ -184,8 +184,24 @@ const AddARoom = () => {
 const CheckIn = () => {
   const [guestExpanded, setGuestExpanded] = useState(true);
   const [identificationExpanded, setIdentificationExpanded] = useState(false);
-  const [vehicleExpanded, setVehicleExpanded] = useState(false);
   const [rateExpanded, setRateExpanded] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+    country: "",
+    email: "",
+    phone: "",
+    company: "",
+    idType: "",
+    idNumber: "",
+    roomNumber: [],
+    dateIn: "",
+    dateOut: "",
+    numberOfAdults: "",
+    numberOfChildren: "",
+    notes: "",
+  });
   return (
     <div className="admin-form check-in">
       <h2>Check In</h2>
@@ -212,44 +228,79 @@ const CheckIn = () => {
                 <label htmlFor="firstName" className="form-label">
                   First Name
                 </label>
-                <input type="text" id="firstName" className="form-control" />
+                <input
+                  type="text"
+                  id="firstName"
+                  className="form-control"
+                  value={formData.firstName}
+                />
               </div>
               <div className="col">
                 <label htmlFor="lastName" className="form-label">
                   Last Name
                 </label>
-                <input type="text" id="lastName" className="form-control" />
+                <input
+                  type="text"
+                  id="lastName"
+                  className="form-control"
+                  value={formData.lastName}
+                />
               </div>
             </div>
             <div className="mb-3">
               <label htmlFor="address" className="form-label">
                 Address
               </label>
-              <input type="text" id="address" className="form-control" />
+              <input
+                type="text"
+                id="address"
+                className="form-control"
+                value={formData.address}
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="country" className="form-label">
                 Country
               </label>
-              <input type="text" id="country" className="form-control" />
+              <input
+                type="text"
+                id="country"
+                className="form-control"
+                value={formData.country}
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 Email
               </label>
-              <input type="email" id="email" className="form-control" />
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                value={formData.email}
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="phone" className="form-label">
                 Phone
               </label>
-              <input type="number" id="phone" className="form-control" />
+              <input
+                type="number"
+                id="phone"
+                className="form-control"
+                value={formData.phone}
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="company" className="form-label">
                 Company
               </label>
-              <input type="text" id="company" className="form-control" />
+              <input
+                type="text"
+                id="company"
+                className="form-control"
+                value={formData.company}
+              />
             </div>
             <div className="">
               <button type="submit" className="btn btn-success float-end">
@@ -304,59 +355,6 @@ const CheckIn = () => {
           </>
         )}
       </form>
-
-      {/* <br />
-      <form
-        className="card p-3  vehicle-information"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setRateExpanded(true);
-        }}
-      >
-        <div
-          className=" expand-btn"
-          onClick={() => setVehicleExpanded(!vehicleExpanded)}
-        >
-          <span>Vehicle Information</span>
-          <AiOutlineDownCircle />
-        </div>
-        {vehicleExpanded && (
-          <>
-            <br />
-
-            <div className="mb-3">
-              <label htmlFor="vehicle-type" className="form-label">
-                Vehicle Type
-              </label>
-              <select id="vehicle-type" className="form-select">
-                <option selected>Select a vehicle</option>
-                <option value="motorbike">MotorBike</option>
-                <option value="bicycle">Bicycle</option>
-                <option value="scooty">Scooty</option>
-                <option value="car">Car</option>
-              </select>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="vehicle-model" className="form-label">
-                Vehicle Model
-              </label>
-              <input type="text" id="vehicle-model" className="form-control" />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="plate-no" className="form-label">
-                Plate No.
-              </label>
-              <input type="text" id="plate-no" className="form-control" />
-            </div>
-
-            <div className="">
-              <button type="submit" className="btn btn-success float-end">
-                Next
-              </button>
-            </div>
-          </>
-        )}
-      </form> */}
 
       <br />
       <form
@@ -432,7 +430,7 @@ const CheckIn = () => {
             </div>
             <div className="">
               <button type="submit" className="btn btn-success float-end">
-                Next
+                Check In
               </button>
             </div>
           </>
@@ -446,7 +444,18 @@ const CheckOut = () => {
     <div className="admin-form check-out">
       <h2>Check Out</h2>
       <hr />
-      <div className="mb-3"></div>
+      <h6>Enter the room number that you want to check-out</h6>
+      <form action="">
+        <div className="mb-3">
+          <label htmlFor="roomNumber" className="form-label">
+            Room number
+          </label>
+          <input type="number" className="form-control" />
+        </div>
+        <button type="submit" className="btn btn-danger float-end">
+          Check Out
+        </button>
+      </form>
     </div>
   );
 };
