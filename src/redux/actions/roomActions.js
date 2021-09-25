@@ -5,17 +5,18 @@ export const send_room_add_request = (formData) => {
     try {
       // console.log(formData);
       // return;
-      const { data: res } = await axios.post("/add-room", formData);
-
+      const res = await axios.post("/add-room", formData);
+      console.log(res);
       const { data, error } = await res;
       console.log(data, error);
-      if (Object.keys(error).length >= 1) {
+      //   console.log(data, error);
+      if (error && Object.keys(error).length >= 1) {
         dispatch(room_creation_failed(error));
         return;
       }
-      dispatch(room_creation_successful(data.data));
+      dispatch(room_creation_successful(data));
     } catch (err) {
-      dispatch(room_creation_failed(err.error));
+      dispatch(room_creation_failed(err?.response?.data));
     }
   };
 };

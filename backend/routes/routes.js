@@ -19,8 +19,9 @@ router.post("/add-room", async (req, res) => {
 
     if (doesExist.length > 0) {
       return res.status(400).send({
-        error: { message: "Room number already exists." },
-        data: {},
+        type: "error",
+        message: "Room number already exists.",
+        details: {},
       });
     }
 
@@ -32,16 +33,15 @@ router.post("/add-room", async (req, res) => {
       price,
     });
     res.status(200).send({
-      error: {},
-      data: {
-        message: "Room created",
-        data: r,
-      },
+      type: "data",
+      details: {},
+      message: "Room created",
     });
   } catch (err) {
     res.status(500).send({
-      error: { message: err.message, details: err },
-      data: {},
+      type: "error",
+      details: {},
+      message: "Something went wrong!",
     });
   }
 });
@@ -74,10 +74,9 @@ router.post("/check-in", async (req, res) => {
     if (r.length < 1) {
       res
         .send({
-          error: {
-            message: `The given room numbers were not found.`,
-          },
-          data: {},
+          type: "error",
+          details: {},
+          message: `The given room numbers were not found.`,
         })
         .status(400);
     }
@@ -85,10 +84,9 @@ router.post("/check-in", async (req, res) => {
     r.forEach((room) => {
       if (room.isBooked) {
         res.status(400).send({
-          error: {
-            message: `Room ${room.roomNumber} is not available`,
-          },
-          data: {},
+          type: "error",
+          details: {},
+          message: `Room ${room.roomNumber} is not available`,
         });
         return;
       }
@@ -124,17 +122,16 @@ router.post("/check-in", async (req, res) => {
       notes,
       roomBooked: roomsBooked,
     });
-    res.status(400).send({
-      error: {},
-      data: {
-        message: "Order placed successfully.",
-        details: order,
-      },
+    res.status(200).send({
+      type: "data",
+      details: order,
+      message: "Order placed successfully.",
     });
   } catch (err) {
     res.status(500).send({
-      error: { message: err.message, details: err },
-      data: {},
+      type: "error",
+      details: err,
+      message: "Something went wrong!",
     });
   }
 });
@@ -151,13 +148,13 @@ router.post("/check-out", async (req, res) => {
   );
   await Room.findOneAndUpdate({ roomNumber }, { isBooked: false });
 
-  res.send({
-    error: {},
-    data: {
+  res
+    .send({
+      type: "data",
+      details: placedOrder,
       message: "Check-out successful.",
-      data: placedOrder,
-    },
-  });
+    })
+    .status(200);
 
   // const bookedRoom = await Room.find({ roomNumber }).update({
   //   isBooked: false,
