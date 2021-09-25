@@ -6,10 +6,14 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-console.log(process.env.MONGO_LOCAL_URI);
 const app = express();
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 app.use(bodyParser.json());
 dotenv.config();
 
@@ -21,6 +25,7 @@ mongoose.connect(
   }
 );
 
+// console.log(routes.route);
 app.use("/api", routes);
 // app.use("/api/", userRoute);
 app.listen(4000);

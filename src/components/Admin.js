@@ -3,8 +3,11 @@ import "../styles/sidebar.scss";
 import "../styles/admin.scss";
 import Dashboard from "./Dashboard";
 import { AiOutlineDownCircle } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { send_room_add_request } from "../redux/actions/roomActions";
 import clsx from "clsx";
 export default function Admin() {
+  const dispatch = useDispatch();
   const [activeForm, setActiveForm] = useState({ component: Dashboard });
   return (
     <div className="admin">
@@ -72,35 +75,85 @@ export default function Admin() {
 }
 
 const AddARoom = () => {
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({
+    roomNumber: undefined,
+    capacity: undefined,
+    category: undefined,
+    price: undefined,
+    beds: undefined,
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(send_room_add_request(formData));
+  };
+
   return (
     <div className="admin-form add-a-room">
       <h2>Add/Update a room</h2>
       <hr />
-      <form action="#">
+      <form action="#" onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="room-number" className="form-label">
             Room No :
           </label>
-          <input type="number" className="form-control" id="room-number" />
+          <input
+            type="number"
+            className="form-control"
+            name="roomNumber"
+            id="room-number"
+            onChange={handleChange}
+            required={true}
+          />
         </div>
         <div className="mb-3">
-          <label htmlFor="unit" className="form-label">
+          <label htmlFor="capacity" className="form-label">
             Capacity
           </label>
-          <input type="number" className="form-control" id="unit" />
+          <input
+            type="number"
+            className="form-control"
+            id="capacity"
+            name="capacity"
+            onChange={handleChange}
+            required={true}
+          />
         </div>
         <div className="mb-3">
           <label htmlFor="price" className="form-label">
             Price
           </label>
-          <input type="number" className="form-control" id="price" />
+          <input
+            type="number"
+            className="form-control"
+            id="price"
+            name="price"
+            onChange={handleChange}
+            required={true}
+          />
         </div>
         <div className="mb-3">
-          <label htmlFor="class" className="form-label">
-            Class
+          <label htmlFor="category" className="form-label">
+            Category
           </label>
-          <select type="" className="form-select" id="class">
-            <option selected>Select a room class</option>
+          <select
+            type=""
+            className="form-select"
+            id="category"
+            name="category"
+            onChange={handleChange}
+            required={true}
+          >
+            <option selected>Select a room category</option>
             <option value="deluxe">Deluxe</option>
             <option value="budget">Budget</option>
           </select>
@@ -109,7 +162,14 @@ const AddARoom = () => {
           <label htmlFor="beds" className="form-label">
             No. of beds
           </label>
-          <input type="number" className="form-control" id="beds" />
+          <input
+            type="number"
+            className="form-control"
+            id="beds"
+            name="beds"
+            onChange={handleChange}
+            required={true}
+          />
         </div>
         <div className="mb-3">
           <button type="submit" className="btn btn-primary float-end">
