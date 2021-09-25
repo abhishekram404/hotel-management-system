@@ -1,4 +1,3 @@
-// const { number } = require("joi");
 const mongoose = require("mongoose");
 
 const customerSchema = mongoose.Schema({
@@ -17,7 +16,7 @@ const customerSchema = mongoose.Schema({
     trim: true,
   },
 
-  email: { type: String, trim: true, lowercase: true, unique: true },
+  email: { type: String, trim: true, lowercase: true, unique: false },
 
   phone: {
     type: String,
@@ -45,36 +44,8 @@ const customerSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
-  room: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
+  //   order: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
 });
 
 const Customer = mongoose.model("Customer", customerSchema);
-
-const roomSchema = mongoose.Schema({
-  roomNumber: {
-    type: Number,
-    // required: true,
-  },
-  capacity: {
-    type: Number,
-    // required: true,
-    min: 1,
-  },
-  category: {
-    enum: ["deluxe", "budget"],
-    // required: true,
-  },
-  price: {
-    type: Number,
-    // required: true,
-  },
-  beds: {
-    type: Number,
-    // required: true,
-  },
-});
-
-const Room = mongoose.model("Room", roomSchema);
-
-module.exports = Room;
 module.exports = Customer;
