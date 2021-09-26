@@ -16,8 +16,6 @@ const customerSchema = mongoose.Schema({
     trim: true,
   },
 
-  email: { type: String, trim: true, lowercase: true, unique: false },
-
   phone: {
     type: String,
     maxLength: 10,

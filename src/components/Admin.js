@@ -3,74 +3,96 @@ import "../styles/sidebar.scss";
 import "../styles/admin.scss";
 import Dashboard from "./Dashboard";
 import { AiOutlineDownCircle } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { send_room_add_request } from "../redux/actions/roomActions";
+import send_check_in_request from "../redux/actions/orderActions";
+import { send_check_out_request } from "../redux/actions/orderActions";
 import clsx from "clsx";
+import Alert from "./Alert";
+
 export default function Admin() {
   const dispatch = useDispatch();
+
+  const { user, dashboard, orders, customers, rooms } = useSelector(
+    (state) => state.all.details
+  );
+
   const [activeForm, setActiveForm] = useState({ component: CheckOut });
   return (
-    <div className="admin">
-      <div className="sidebar p-3">
-        <h3 className="text-center">Admin </h3>
-        <hr />
-        <div className="options w-75">
-          <div
-            className={clsx(
-              "option",
-              activeForm.component == Dashboard && "active"
-            )}
-            onClick={() => setActiveForm({ component: Dashboard })}
-          >
-            Dashboard
-          </div>
+    <>
+      <Alert
+        message={
+          activeForm == Dashboard
+            ? dashboard.message
+            : activeForm == AddARoom
+            ? rooms.message
+            : activeForm == CheckIn
+            ? orders.message
+            : activeForm == CheckOut && "Check Out"
+        }
+      />
+      <div className="admin">
+        <div className="sidebar p-3">
+          <h3 className="text-center">Admin </h3>
           <hr />
-          <div
-            className={clsx(
-              "option",
-              activeForm.component == AddARoom && "active"
-            )}
-            onClick={() => setActiveForm({ component: AddARoom })}
-          >
-            Add a room
-          </div>
-          <hr />
-          <div
-            className={clsx(
-              "option",
-              activeForm.component == CheckIn && "active"
-            )}
-            onClick={() => setActiveForm({ component: CheckIn })}
-          >
-            Check In
-          </div>
-          <hr />
-          <div
-            className={clsx(
-              "option",
-              activeForm.component == CheckOut && "active"
-            )}
-            onClick={() => setActiveForm({ component: CheckOut })}
-          >
-            Check Out
-          </div>
-          <hr />
-          <div
-            className={clsx(
-              "option",
-              activeForm.component == AddEmployee && "active"
-            )}
-            onClick={() => setActiveForm({ component: AddEmployee })}
-          >
-            Add Employee
+          <div className="options w-75">
+            <div
+              className={clsx(
+                "option",
+                activeForm.component == Dashboard && "active"
+              )}
+              onClick={() => setActiveForm({ component: Dashboard })}
+            >
+              Dashboard
+            </div>
+            <hr />
+            <div
+              className={clsx(
+                "option",
+                activeForm.component == AddARoom && "active"
+              )}
+              onClick={() => setActiveForm({ component: AddARoom })}
+            >
+              Add a room
+            </div>
+            <hr />
+            <div
+              className={clsx(
+                "option",
+                activeForm.component == CheckIn && "active"
+              )}
+              onClick={() => setActiveForm({ component: CheckIn })}
+            >
+              Check In
+            </div>
+            <hr />
+            <div
+              className={clsx(
+                "option",
+                activeForm.component == CheckOut && "active"
+              )}
+              onClick={() => setActiveForm({ component: CheckOut })}
+            >
+              Check Out
+            </div>
+            <hr />
+            <div
+              className={clsx(
+                "option",
+                activeForm.component == AddEmployee && "active"
+              )}
+              onClick={() => setActiveForm({ component: AddEmployee })}
+            >
+              Add Employee
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="admin-display-area">
-        {activeForm.component && <activeForm.component />}
+        <div className="admin-display-area">
+          {activeForm.component && <activeForm.component />}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -182,6 +204,7 @@ const AddARoom = () => {
 };
 
 const CheckIn = () => {
+  const dispatch = useDispatch();
   const [guestExpanded, setGuestExpanded] = useState(true);
   const [identificationExpanded, setIdentificationExpanded] = useState(false);
   const [rateExpanded, setRateExpanded] = useState(false);
@@ -190,7 +213,6 @@ const CheckIn = () => {
     lastName: "",
     address: "",
     country: "",
-    email: "",
     phone: "",
     company: "",
     idType: "",
@@ -202,6 +224,19 @@ const CheckIn = () => {
     numberOfChildren: "",
     notes: "",
   });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(send_check_in_request(formData));
+  };
+
   return (
     <div className="admin-form check-in">
       <h2>Check In</h2>
@@ -233,6 +268,9 @@ const CheckIn = () => {
                   id="firstName"
                   className="form-control"
                   value={formData.firstName}
+                  name="firstName"
+                  onChange={handleChange}
+                  required={true}
                 />
               </div>
               <div className="col">
@@ -244,6 +282,9 @@ const CheckIn = () => {
                   id="lastName"
                   className="form-control"
                   value={formData.lastName}
+                  name="lastName"
+                  onChange={handleChange}
+                  required={true}
                 />
               </div>
             </div>
@@ -256,6 +297,9 @@ const CheckIn = () => {
                 id="address"
                 className="form-control"
                 value={formData.address}
+                name="address"
+                onChange={handleChange}
+                required={true}
               />
             </div>
             <div className="mb-3">
@@ -267,19 +311,12 @@ const CheckIn = () => {
                 id="country"
                 className="form-control"
                 value={formData.country}
+                name="country"
+                onChange={handleChange}
+                required={true}
               />
             </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                className="form-control"
-                value={formData.email}
-              />
-            </div>
+
             <div className="mb-3">
               <label htmlFor="phone" className="form-label">
                 Phone
@@ -289,6 +326,9 @@ const CheckIn = () => {
                 id="phone"
                 className="form-control"
                 value={formData.phone}
+                name="phone"
+                onChange={handleChange}
+                required={true}
               />
             </div>
             <div className="mb-3">
@@ -300,6 +340,9 @@ const CheckIn = () => {
                 id="company"
                 className="form-control"
                 value={formData.company}
+                name="company"
+                onChange={handleChange}
+                required={true}
               />
             </div>
             <div className="">
@@ -333,18 +376,32 @@ const CheckIn = () => {
               <label htmlFor="id-type" className="form-label">
                 ID Type
               </label>
-              <select id="id-type" className="form-select">
-                <option selected value="citizenship">
-                  Citizenship
-                </option>
-                <option value="driving-license">Driving License</option>
+              <select
+                id="id-type"
+                className="form-select"
+                name="idType"
+                value={formData.idType}
+                onChange={handleChange}
+                required={true}
+              >
+                <option selected> Select an ID type </option>
+                <option value="citizenship">Citizenship</option>
+                <option value="driving_license">Driving License</option>
               </select>
             </div>
             <div className="mb-3">
               <label htmlFor="id-number" className="form-label">
                 ID Number
               </label>
-              <input type="text" id="id-number" className="form-control" />
+              <input
+                type="text"
+                id="id-number"
+                className="form-control"
+                name="idNumber"
+                value={formData.idNumber}
+                onChange={handleChange}
+                required={true}
+              />
             </div>
 
             <div className="">
@@ -361,6 +418,7 @@ const CheckIn = () => {
         className="card p-3  rate-information"
         onSubmit={(e) => {
           e.preventDefault();
+          handleSubmit(e);
         }}
       >
         <div
@@ -378,23 +436,46 @@ const CheckIn = () => {
               <label htmlFor="room-no" className="form-label">
                 Room No.
               </label>
-              <input type="number" className="form-control" />
+              <input
+                type="number"
+                className="form-control"
+                value={formData.roomNumber}
+                name="roomNumber"
+                onChange={handleChange}
+                required={true}
+              />
             </div>
             <div className="row mb-3">
               <label htmlFor="" className="form-label">
                 Range of date
               </label>
               <div className="col">
-                <label htmlFor="vehicle-model" className="form-label">
+                <label htmlFor="dateIn" className="form-label">
                   From
                 </label>
-                <input type="date" id="date-from" className="form-control" />
+                <input
+                  type="date"
+                  id="dateIn"
+                  className="form-control"
+                  value={formData.dataIn}
+                  name="dateIn"
+                  onChange={handleChange}
+                  required={true}
+                />
               </div>
               <div className="col">
-                <label htmlFor="vehicle-model" className="form-label">
+                <label htmlFor="dateOut" className="form-label">
                   To
                 </label>
-                <input type="date" id="date-to" className="form-control" />
+                <input
+                  type="date"
+                  id="dateOut"
+                  className="form-control"
+                  value={formData.dateOut}
+                  name="dateOut"
+                  onChange={handleChange}
+                  required={true}
+                />
               </div>
             </div>
             <div className="row mb-3">
@@ -402,7 +483,15 @@ const CheckIn = () => {
                 <label htmlFor="adults-no" className="form-label">
                   No. of adults
                 </label>
-                <input type="number" id="adults-no" className="form-control" />
+                <input
+                  type="number"
+                  id="adults-no"
+                  className="form-control"
+                  value={formData.numberOfAdults}
+                  name="numberOfAdults"
+                  onChange={handleChange}
+                  required={true}
+                />
               </div>
               <div className="col">
                 <label htmlFor="children-no" className="form-label">
@@ -412,6 +501,10 @@ const CheckIn = () => {
                   type="number"
                   id="children-no"
                   className="form-control"
+                  value={formData.numberOfChildren}
+                  name="numberOfChildren"
+                  onChange={handleChange}
+                  required={true}
                 />
               </div>
             </div>
@@ -426,6 +519,8 @@ const CheckIn = () => {
                 cols="30"
                 rows="5"
                 className="form-control"
+                value={formData.notes}
+                onChange={handleChange}
               ></textarea>
             </div>
             <div className="">
@@ -440,17 +535,38 @@ const CheckIn = () => {
   );
 };
 const CheckOut = () => {
+  const dispatch = useDispatch();
+  const [roomNumber, setRoomNumber] = useState({
+    roomNumber: "",
+  });
+
+  const handleChange = (e) => {
+    setRoomNumber({
+      ...roomNumber,
+      roomNumber: e.target.value,
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(send_check_out_request(roomNumber));
+  };
   return (
     <div className="admin-form check-out">
       <h2>Check Out</h2>
       <hr />
       <h6>Enter the room number that you want to check-out</h6>
-      <form action="">
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="roomNumber" className="form-label">
             Room number
           </label>
-          <input type="number" className="form-control" />
+          <input
+            type="number"
+            className="form-control"
+            value={roomNumber.roomNumber}
+            onChange={handleChange}
+            required={true}
+          />
         </div>
         <button type="submit" className="btn btn-danger float-end">
           Check Out
@@ -459,6 +575,7 @@ const CheckOut = () => {
     </div>
   );
 };
+
 const AddEmployee = () => {
   return (
     <div className="admin-form add-employee">
@@ -491,12 +608,7 @@ const AddEmployee = () => {
           </label>
           <input type="number" id="phone" className="form-control" />
         </div>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <input type="email" id="email" className="form-control" />
-        </div>
+
         <div className="row mb-3">
           <div className="col">
             <label htmlFor="address-perm" className="form-label">

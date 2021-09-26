@@ -6,13 +6,11 @@ const orderSchema = mongoose.Schema({
     required: true,
     ref: "Customer",
   },
-  roomBooked: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Room",
-    },
-  ],
+  roomBooked: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Room",
+  },
   dateIn: { type: Date, required: true },
   dateOut: { type: Date, required: true },
   numberOfAdults: { type: Number },

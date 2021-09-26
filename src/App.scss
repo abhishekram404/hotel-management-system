@@ -1,0 +1,11 @@
+@import "./styles/global.scss";
+.App {
+  position: relative;
+  .alert-cont {
+    z-index: 100000000000000000000;
+    position: absolute;
+    top: 12%;
+    right: 2%;
+    width: 300px;
+  }
+}

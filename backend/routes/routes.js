@@ -2,13 +2,43 @@ const router = require("express").Router();
 const Room = require("../models/room.model");
 const Customer = require("../models/customer.model");
 const Order = require("../models/order.model");
-router.get("/", (req, res) => {
-  res.send("Wohoooooo! It's working.");
+const jwt = require("jsonwebtoken");
+const auth = require("../middleware/auth");
+router.get("/all", auth, async (req, res) => {
+  try {
+    const customers = await Customer.find({});
+    const orders = await Order.find({});
+    const rooms = await Room.find({});
+
+    res.cookie("isUserLoggedIn", true, {
+      secure: false,
+      httpOnly: false,
+      maxAge: 1000000000,
+    });
+    res.status(200).send({
+      type: "data",
+      message: "Data fetched successfully.",
+      isUserLoggedIn: true,
+      details: {
+        customers,
+        orders,
+        rooms,
+      },
+    });
+  } catch (err) {
+    res.status(500).send({
+      type: "error",
+      message: "Data fetch failed.",
+      isUserLoggedIn: false,
+      details: {
+        err,
+      },
+    });
+  }
 });
 
 // Add room
-router.post("/add-room", async (req, res) => {
-  console.log(req.body);
+router.post("/add-room", auth, async (req, res) => {
   try {
     const { roomNumber, capacity, category, beds, price } = await req.body;
 
@@ -32,7 +62,7 @@ router.post("/add-room", async (req, res) => {
       beds,
       price,
     });
-    res.status(200).send({
+    return res.status(200).send({
       type: "data",
       details: {},
       message: "Room created",
@@ -40,21 +70,20 @@ router.post("/add-room", async (req, res) => {
   } catch (err) {
     res.status(500).send({
       type: "error",
-      details: {},
+      details: err,
       message: "Something went wrong!",
     });
   }
 });
 
 // Check In
-router.post("/check-in", async (req, res) => {
+router.post("/check-in", auth, async (req, res) => {
   try {
     const {
       firstName,
       lastName,
       address,
       country,
-      email,
       phone,
       company,
       idType,
@@ -68,42 +97,32 @@ router.post("/check-in", async (req, res) => {
     } = await req.body;
 
     // find the rooms by roomNumber
-    const r = await Room.find({ roomNumber: roomNumber });
+    const r = await Room.findOne({ roomNumber: roomNumber });
 
     // check if the room number exists
-    if (r.length < 1) {
-      res
+    if (!r) {
+      return res
         .send({
           type: "error",
           details: {},
-          message: `The given room numbers were not found.`,
+          message: `The given room number was not found.`,
         })
         .status(400);
     }
     // check if the room is available
-    r.forEach((room) => {
-      if (room.isBooked) {
-        res.status(400).send({
-          type: "error",
-          details: {},
-          message: `Room ${room.roomNumber} is not available`,
-        });
-        return;
-      }
-    });
 
-    // find the rooms and book
-    await Room.find({ roomNumber: roomNumber }).update({
-      isBooked: true,
-    });
-    //  extract rooms  id's
-    const roomsBooked = r.map((a) => a._id);
+    if (r.isBooked) {
+      return res.status(400).send({
+        type: "error",
+        details: {},
+        message: `Room ${r.roomNumber} is not available`,
+      });
+    }
 
     // create the customer
     const customer = await Customer.create({
       firstName,
       lastName,
-      email,
       phone,
       address,
       country,
@@ -112,7 +131,7 @@ router.post("/check-in", async (req, res) => {
       idNumber,
     });
 
-    // crate order and send it in response to the client
+    // create order and send it in response to the client
     const order = await Order.create({
       orderBy: customer._id,
       dateIn,
@@ -120,15 +139,24 @@ router.post("/check-in", async (req, res) => {
       numberOfAdults,
       numberOfChildren,
       notes,
-      roomBooked: roomsBooked,
+      roomBooked: r._id,
     });
-    res.status(200).send({
+
+    // find the rooms and book
+    await Room.findOneAndUpdate(
+      { roomNumber: roomNumber },
+      {
+        isBooked: true,
+      }
+    );
+
+    return res.status(200).send({
       type: "data",
       details: order,
       message: "Order placed successfully.",
     });
   } catch (err) {
-    res.status(500).send({
+    return res.status(500).send({
       type: "error",
       details: err,
       message: "Something went wrong!",
@@ -136,29 +164,44 @@ router.post("/check-in", async (req, res) => {
   }
 });
 
-router.post("/check-out", async (req, res) => {
-  const { roomNumber } = await req.body;
+// Check Out
+router.post("/check-out", auth, async (req, res) => {
+  try {
+    const { roomNumber } = await req.body;
 
-  const { _id: foundRoomId } = await Room.findOne({ roomNumber });
-  console.log(foundRoomId);
-  // return;
-  const placedOrder = await Order.findOneAndUpdate(
-    { roomBooked: foundRoomId },
-    { completed: true }
-  );
-  await Room.findOneAndUpdate({ roomNumber }, { isBooked: false });
+    const foundRoom = await Room.findOne({ roomNumber });
 
-  res
-    .send({
-      type: "data",
-      details: placedOrder,
-      message: "Check-out successful.",
-    })
-    .status(200);
+    // return;
+    if (!foundRoom) {
+      return res.send({
+        type: "error",
+        details: {},
+        message: "The entered room number doesn't exist.",
+      });
+    }
+    const { _id: foundRoomId } = await foundRoom;
 
-  // const bookedRoom = await Room.find({ roomNumber }).update({
-  //   isBooked: false,
-  // });
+    // return;
+    const placedOrder = await Order.findOneAndUpdate(
+      { roomBooked: foundRoomId },
+      { completed: true }
+    );
+    await Room.findOneAndUpdate({ roomNumber }, { isBooked: false });
+
+    return res
+      .send({
+        type: "data",
+        details: placedOrder,
+        message: "Check-out successful.",
+      })
+      .status(200);
+  } catch (err) {
+    return res.status(500).send({
+      type: "error",
+      details: err,
+      message: "Something went wrong!",
+    });
+  }
 });
 
 // {
@@ -178,5 +221,75 @@ router.post("/check-out", async (req, res) => {
 //       "numberOfChildren": 0,
 //       "notes": "",
 // }
+
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = await req.body;
+
+    if (username === "admin" && password === "admin123") {
+      const token = await jwt.sign({ username }, "JWTSUPERSECRETKEY", {
+        expiresIn: 1000000000,
+      });
+      res.cookie("jwt", token, {
+        secure: false,
+        httpOnly: true,
+        maxAge: 1000000000,
+      });
+      res.cookie("isUserLoggedIn", true, {
+        secure: false,
+        httpOnly: false,
+        maxAge: 1000000000,
+      });
+
+      return res.send({
+        type: "data",
+        isUserLoggedIn: true,
+        message: "Login successful",
+        details: {},
+      });
+    }
+
+    res.clearCookie("jwt");
+    res.cookie("isUserLoggedIn", false, {
+      secure: false,
+      httpOnly: false,
+      maxAge: 1000000000,
+    });
+    res.send({
+      type: "error",
+      isUserLoggedIn: false,
+      message: "Wrong username/password",
+      details: {},
+    });
+  } catch (err) {
+    res.clearCookie("jwt");
+    res.cookie("isUserLoggedIn", false, {
+      secure: false,
+      httpOnly: false,
+      maxAge: 1000000000,
+    });
+    res.send({
+      type: "error",
+      isUserLoggedIn: false,
+      message: "Login failed",
+      details: err,
+    });
+  }
+});
+
+router.post("/logout", async (req, res) => {
+  res.clearCookie("jwt");
+  res.cookie("isUserLoggedIn", false, {
+    secure: false,
+    httpOnly: false,
+    maxAge: 1000000000,
+  });
+  return res.send({
+    type: "data",
+    isUserLoggedIn: false,
+    message: "Logged out",
+    details: {},
+  });
+});
 
 module.exports = router;

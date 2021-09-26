@@ -1,30 +1,40 @@
-import "./App.css";
+import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, useHistory } from "react-router-dom";
 import Home from "./components/Home";
 import Admin from "./components/Admin";
-import Register from "./components/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { useDispatch } from "react-redux";
+import send_fetch_data_request from "./redux/actions/dashboardActions";
+import { useEffect } from "react";
+import Cookies from "js-cookie";
+import NotFound from "./components/NotFound";
 function App() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    const isUserLoggedIn = Cookies.get("isUserLoggedIn");
+
+    dispatch({
+      type: "SET_FROM_COOKIE",
+      payload: isUserLoggedIn,
+    });
+
+    dispatch(send_fetch_data_request());
+  }, []);
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter history={history}>
         <Navbar />
         <Switch>
           <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route exact path="/" component={Home} />
-          <Route path="/home" component={Home} />
-          <Route path="/admin" component={Admin} />
-
-          <Route path="*">
-            <h1>
-              {" "}
-              Error 404! <br /> Page not found
-            </h1>
-            d
-          </Route>
+          <ProtectedRoute exact path="/" component={Home} />
+          <ProtectedRoute path="/home" component={Home} />
+          <ProtectedRoute path="/admin" component={Admin} />
+          <Route path="*" exact component={NotFound} />
         </Switch>
       </BrowserRouter>
     </div>
