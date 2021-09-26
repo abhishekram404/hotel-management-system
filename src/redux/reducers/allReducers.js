@@ -1,13 +1,13 @@
 const allReducers = (
   state = {
     isUserLoggedIn: false,
-    message: "",
     details: {
       orders: {},
       customers: {},
       rooms: {},
       dashboard: {},
       user: {},
+      checkOut: {},
     },
     type: "",
   },
@@ -71,6 +71,28 @@ const allReducers = (
         type: "error",
         details: { ...state.details, orders: action.payload },
       };
+
+    case "CHECK_OUT_SUCCESS": {
+      return {
+        ...state,
+        type: "data",
+        details: {
+          ...state.details,
+          checkOut: action.payload,
+        },
+      };
+    }
+
+    case "CHECK_OUT_FAILED": {
+      return {
+        ...state,
+        type: "error",
+        details: {
+          ...state.details,
+          checkOut: action.payload,
+        },
+      };
+    }
 
     case "ROOM_CREATION_SUCCESSFUL":
       return {

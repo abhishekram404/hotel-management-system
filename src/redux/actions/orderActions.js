@@ -38,10 +38,23 @@ export const send_check_out_request = (formData) => {
     try {
       const res = await axios.post("/check-out", formData);
       console.log(res.data);
-      console.log("Make a reducer for check out, bruh!");
+      const { data } = await res;
+      if (data.type !== "data") {
+        dispatch({
+          type: "CHECK_OUT_FAILED",
+          payload: data,
+        });
+        return;
+      }
+      dispatch({
+        type: "CHECK_OUT_SUCCESS",
+        payload: data,
+      });
     } catch (err) {
-      console.log(err.response.data);
-      console.log("Make a reducer for check out, bruh!");
+      dispatch({
+        type: "CHECK_OUT_FAILED",
+        payload: err?.response?.data,
+      });
     }
   };
 };

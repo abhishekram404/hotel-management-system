@@ -238,6 +238,7 @@ const CheckIn = () => {
   const [guestExpanded, setGuestExpanded] = useState(true);
   const [identificationExpanded, setIdentificationExpanded] = useState(false);
   const [rateExpanded, setRateExpanded] = useState(false);
+  const { orders } = useSelector((state) => state.all.details);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -553,6 +554,16 @@ const CheckIn = () => {
                 onChange={handleChange}
               ></textarea>
             </div>
+            {Object.keys(orders).length > 0 && (
+              <div
+                className={clsx(
+                  "mb-3 form-text fw-bold",
+                  orders.type === "error" ? "text-danger" : "text-success"
+                )}
+              >
+                {orders.message}
+              </div>
+            )}
             <div className="">
               <button type="submit" className="btn btn-success float-end">
                 Check In
@@ -570,6 +581,7 @@ const CheckOut = () => {
     roomNumber: "",
   });
 
+  const { checkOut } = useSelector((state) => state.all.details);
   const handleChange = (e) => {
     setRoomNumber({
       ...roomNumber,
@@ -598,6 +610,16 @@ const CheckOut = () => {
             required={true}
           />
         </div>
+        {Object.keys(checkOut).length > 0 && (
+          <div
+            className={clsx(
+              "mb-3 form-text fw-bold",
+              checkOut.type === "error" ? "text-danger" : "text-success"
+            )}
+          >
+            {checkOut.message}
+          </div>
+        )}
         <button type="submit" className="btn btn-danger float-end">
           Check Out
         </button>
