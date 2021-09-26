@@ -55,6 +55,7 @@ function Login() {
               name="username"
               value={formData.username}
               onChange={handleChange}
+              required={true}
             />
             <div className="form-text">
               We'll never share your username with anyone else.
@@ -71,6 +72,7 @@ function Login() {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              required={true}
             />
           </div>
 

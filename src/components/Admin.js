@@ -11,7 +11,7 @@ import clsx from "clsx";
 import send_employee_add_request from "../redux/actions/employeeActions";
 
 export default function Admin() {
-  const [activeForm, setActiveForm] = useState({ component: CheckOut });
+  const [activeForm, setActiveForm] = useState({ component: Dashboard });
   return (
     <>
       <div className="admin">

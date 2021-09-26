@@ -1,11 +1,20 @@
 const allReducers = (
   state = {
     isUserLoggedIn: false,
+    loading: true,
     details: {
       orders: {},
       customers: {},
+
       rooms: {},
-      dashboard: {},
+      dashboard: {
+        details: {
+          rooms: {},
+          orders: {},
+          customers: {},
+          employees: {},
+        },
+      },
       user: {},
       checkOut: {},
       employees: {},
@@ -52,6 +61,7 @@ const allReducers = (
       return {
         ...state,
         type: "data",
+        loading: false,
         details: {
           ...state.details,
           dashboard: action.payload,
@@ -62,6 +72,7 @@ const allReducers = (
       return {
         ...state,
         type: "error",
+        loading: true,
         details: {
           ...state.details,
           dashboard: action.payload,
