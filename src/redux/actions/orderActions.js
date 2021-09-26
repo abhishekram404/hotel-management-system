@@ -1,4 +1,5 @@
 import axios from "axios";
+import send_fetch_data_request from "./dashboardActions";
 
 const send_check_in_request = (formData) => {
   return async (dispatch) => {
@@ -11,6 +12,7 @@ const send_check_in_request = (formData) => {
       }
 
       dispatch(check_in_successful(data));
+      dispatch(send_fetch_data_request());
     } catch (err) {
       dispatch(check_in_failed(err?.response?.data));
     }
@@ -37,7 +39,6 @@ export const send_check_out_request = (formData) => {
   return async (dispatch) => {
     try {
       const res = await axios.post("/check-out", formData);
-      console.log(res.data);
       const { data } = await res;
       if (data.type !== "data") {
         dispatch({
@@ -51,6 +52,8 @@ export const send_check_out_request = (formData) => {
         type: "CHECK_OUT_SUCCESS",
         payload: data,
       });
+      dispatch(send_fetch_data_request());
+
       // setTimeout(() => {
       //   dispatch({
       //     type: "CLEAR_MESSAGE",

@@ -8,6 +8,7 @@ const allReducers = (
       dashboard: {},
       user: {},
       checkOut: {},
+      employees: {},
     },
     type: "",
   },
@@ -15,7 +16,7 @@ const allReducers = (
 ) => {
   switch (action.type) {
     // case "CLEAR_MESSAGE":
-    //   console.log("gonna clear");
+    //   ("gonna clear");
     //   return {
     //     ...state,
     //     details: {
@@ -150,6 +151,26 @@ const allReducers = (
       return {
         ...state,
         isUserLoggedIn: action.payload,
+      };
+
+    case "EMPLOYEE_ADD_SUCCESSFUL":
+      return {
+        ...state,
+        type: "data",
+        details: {
+          ...state.details,
+          employees: action.payload,
+        },
+      };
+
+    case "EMPLOYEE_ADD_FAILED":
+      return {
+        ...state,
+        type: "error",
+        details: {
+          ...state.details,
+          employees: action.payload,
+        },
       };
 
     default:

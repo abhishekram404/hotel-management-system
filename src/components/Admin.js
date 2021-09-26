@@ -8,41 +8,12 @@ import { send_room_add_request } from "../redux/actions/roomActions";
 import send_check_in_request from "../redux/actions/orderActions";
 import { send_check_out_request } from "../redux/actions/orderActions";
 import clsx from "clsx";
-import Alert from "./Alert";
+import send_employee_add_request from "../redux/actions/employeeActions";
 
 export default function Admin() {
-  const dispatch = useDispatch();
-
-  const [isAlertVisible, setAlertVisible] = useState(false);
-
-  const { user, dashboard, orders, customers, rooms } = useSelector(
-    (state) => state.all.details
-  );
-
-  // useEffect(() => {
-  //   setAlertVisible(true);
-  //   return () => {
-  //     setAlertVisible(false);
-  //   };
-  // }, [user, dashboard, orders, customers, rooms]);
-
   const [activeForm, setActiveForm] = useState({ component: CheckOut });
   return (
     <>
-      {isAlertVisible && (
-        <Alert
-          close={setAlertVisible}
-          message={
-            activeForm.component == Dashboard
-              ? dashboard.message
-              : activeForm.component == AddARoom
-              ? rooms.message
-              : activeForm.component == CheckIn
-              ? orders.message
-              : activeForm.component == CheckOut && "Check Out"
-          }
-        />
-      )}
       <div className="admin">
         <div className="sidebar p-3">
           <h3 className="text-center">Admin </h3>
@@ -51,7 +22,7 @@ export default function Admin() {
             <div
               className={clsx(
                 "option",
-                activeForm.component == Dashboard && "active"
+                activeForm.component === Dashboard && "active"
               )}
               onClick={() => setActiveForm({ component: Dashboard })}
             >
@@ -61,7 +32,7 @@ export default function Admin() {
             <div
               className={clsx(
                 "option",
-                activeForm.component == AddARoom && "active"
+                activeForm.component === AddARoom && "active"
               )}
               onClick={() => setActiveForm({ component: AddARoom })}
             >
@@ -71,7 +42,7 @@ export default function Admin() {
             <div
               className={clsx(
                 "option",
-                activeForm.component == CheckIn && "active"
+                activeForm.component === CheckIn && "active"
               )}
               onClick={() => setActiveForm({ component: CheckIn })}
             >
@@ -81,7 +52,7 @@ export default function Admin() {
             <div
               className={clsx(
                 "option",
-                activeForm.component == CheckOut && "active"
+                activeForm.component === CheckOut && "active"
               )}
               onClick={() => setActiveForm({ component: CheckOut })}
             >
@@ -91,7 +62,7 @@ export default function Admin() {
             <div
               className={clsx(
                 "option",
-                activeForm.component == AddEmployee && "active"
+                activeForm.component === AddEmployee && "active"
               )}
               onClick={() => setActiveForm({ component: AddEmployee })}
             >
@@ -629,36 +600,104 @@ const CheckOut = () => {
 };
 
 const AddEmployee = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    fatherName: "",
+    motherName: "",
+    phone: "",
+    address_perm: "",
+    address_curr: "",
+    dob: "",
+    idNumber: "",
+    gender: "",
+  });
+  const dispatch = useDispatch();
+  const { employees } = useSelector((state) => state.all.details);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(send_employee_add_request(formData));
+    setFormData({
+      name: "",
+      fatherName: "",
+      motherName: "",
+      phone: "",
+      address_perm: "",
+      address_curr: "",
+      dob: "",
+      idNumber: "",
+      gender: "",
+    });
+  };
+
   return (
     <div className="admin-form add-employee">
       <h1>Add Employee</h1>
       <hr />
-      <form action="">
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="employee-name" className="form-label">
             Employee Name
           </label>
-          <input type="text" id="employee-name" className="form-control" />
+          <input
+            type="text"
+            id="employee-name"
+            className="form-control"
+            value={formData.name}
+            onChange={handleChange}
+            name="name"
+            required={true}
+          />
         </div>
         <div className="row mb-3">
           <div className="col">
             <label htmlFor="father-name" className="form-label">
               Father's Name
             </label>
-            <input type="text" id="father-name" className="form-control" />
+            <input
+              type="text"
+              id="father-name"
+              className="form-control"
+              value={formData.fatherName}
+              onChange={handleChange}
+              name="fatherName"
+              required={true}
+            />
           </div>
           <div className="col">
             <label htmlFor="mother-name" className="form-label">
               Mother's Name
             </label>
-            <input type="text" id="mother-name" className="form-control" />
+            <input
+              type="text"
+              id="mother-name"
+              className="form-control"
+              value={formData.motherName}
+              onChange={handleChange}
+              name="motherName"
+              required={true}
+            />
           </div>
         </div>
         <div className="mb-3">
           <label htmlFor="phone" className="form-label">
             Phone
           </label>
-          <input type="number" id="phone" className="form-control" />
+          <input
+            type="number"
+            id="phone"
+            className="form-control"
+            value={formData.phone}
+            onChange={handleChange}
+            name="phone"
+            required={true}
+          />
         </div>
 
         <div className="row mb-3">
@@ -666,13 +705,29 @@ const AddEmployee = () => {
             <label htmlFor="address-perm" className="form-label">
               Permanent Address
             </label>
-            <input type="text" id="address-perm" className="form-control" />
+            <input
+              type="text"
+              id="address-perm"
+              className="form-control"
+              value={formData.address_perm}
+              onChange={handleChange}
+              name="address_perm"
+              required={true}
+            />
           </div>
           <div className="col">
             <label htmlFor="address-current" className="form-label">
               Current Address
             </label>
-            <input type="text" id="address-current" className="form-control" />
+            <input
+              type="text"
+              id="address-current"
+              className="form-control"
+              value={formData.address_curr}
+              onChange={handleChange}
+              name="address_curr"
+              required={true}
+            />
           </div>
         </div>
 
@@ -682,7 +737,14 @@ const AddEmployee = () => {
               <label htmlFor="dob" className="form-label">
                 Date of Birth
               </label>
-              <input type="date" className="form-control" />
+              <input
+                type="date"
+                className="form-control"
+                value={formData.dob}
+                onChange={handleChange}
+                name="dob"
+                required={true}
+              />
             </div>
             <div className="col">
               <label htmlFor="national-id-no" className="form-label">
@@ -692,6 +754,10 @@ const AddEmployee = () => {
                 type="number"
                 className="form-control"
                 id="national-id-no"
+                value={formData.idNumber}
+                onChange={handleChange}
+                name="idNumber"
+                required={true}
               />
             </div>
           </div>
@@ -708,6 +774,9 @@ const AddEmployee = () => {
               name="gender"
               id="male"
               className="form-check-input"
+              onChange={handleChange}
+              value="male"
+              required={true}
             />
           </div>
           <div className="form-check">
@@ -719,11 +788,23 @@ const AddEmployee = () => {
               name="gender"
               id="female"
               className="form-check-input"
+              onChange={handleChange}
+              value="female"
+              required={true}
             />
           </div>
           {/* </div> */}
         </div>
-
+        {Object.keys(employees).length > 0 && (
+          <div
+            className={clsx(
+              "mb-3 form-text fw-bold",
+              employees.type === "error" ? "text-danger" : "text-success"
+            )}
+          >
+            {employees.message}
+          </div>
+        )}
         <div className="mb-3">
           <button type="submit" className="btn btn-primary float-end">
             Add employee

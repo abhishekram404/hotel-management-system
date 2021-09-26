@@ -1,4 +1,5 @@
 import axios from "axios";
+import send_fetch_data_request from "./dashboardActions";
 
 export const send_room_add_request = (formData) => {
   return async (dispatch) => {
@@ -11,6 +12,7 @@ export const send_room_add_request = (formData) => {
         return;
       }
       dispatch(room_creation_successful(data));
+      dispatch(send_fetch_data_request());
     } catch (err) {
       dispatch(room_creation_failed(err?.response?.data));
     }

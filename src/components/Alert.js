@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function Alert({ message, close }) {
-  console.log(message);
   return (
     <div className="alert-cont bg-light p-2 rounded">
       <button
@@ -9,7 +8,6 @@ export default function Alert({ message, close }) {
         class="btn-close float-end"
         aria-label="Close"
         onClick={() => {
-          console.log("close");
           close(false);
         }}
       ></button>

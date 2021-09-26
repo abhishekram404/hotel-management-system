@@ -4,11 +4,13 @@ const Customer = require("../models/customer.model");
 const Order = require("../models/order.model");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
+const Employee = require("../models/employee.model");
 router.get("/all", auth, async (req, res) => {
   try {
     const customers = await Customer.find({});
     const orders = await Order.find({});
     const rooms = await Room.find({});
+    const employees = await Employee.find({});
 
     res.cookie("isUserLoggedIn", true, {
       secure: false,
@@ -23,6 +25,7 @@ router.get("/all", auth, async (req, res) => {
         customers,
         orders,
         rooms,
+        employees,
       },
     });
   } catch (err) {
@@ -290,6 +293,46 @@ router.post("/logout", async (req, res) => {
     message: "Logged out",
     details: {},
   });
+});
+
+router.post("/add-employee", auth, async (req, res) => {
+  try {
+    const {
+      name,
+      fatherName,
+      motherName,
+      phone,
+      address_perm,
+      address_curr,
+      dob,
+      idNumber,
+      gender,
+    } = await req.body;
+
+    const employee = await Employee.create({
+      name,
+      fatherName,
+      motherName,
+      phone,
+      address_perm,
+      address_curr,
+      dob,
+      idNumber,
+      gender,
+    });
+
+    return res.status(200).send({
+      type: "data",
+      details: employee,
+      message: "Employee added successfully.",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      type: "error",
+      details: err,
+      message: "Something went wrong!",
+    });
+  }
 });
 
 module.exports = router;
