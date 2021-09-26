@@ -14,6 +14,18 @@ const allReducers = (
   action
 ) => {
   switch (action.type) {
+    // case "CLEAR_MESSAGE":
+    //   console.log("gonna clear");
+    //   return {
+    //     ...state,
+    //     details: {
+    //       ...state.details,
+    //       [action.for]: {
+    //         message: "",
+    //       },
+    //     },
+    //   };
+
     case "LOGIN_SUCCESS":
       return {
         ...state,

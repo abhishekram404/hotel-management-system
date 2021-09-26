@@ -3,17 +3,19 @@ import { useLocation, useHistory, withRouter } from "react-router-dom";
 import "../styles/login.scss";
 import { useSelector, useDispatch } from "react-redux";
 import send_login_request from "../redux/actions/userActions";
+import clsx from "clsx";
 function Login() {
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
-  const { isUserLoggedIn } = useSelector((state) => state.all);
-
+  const { isUserLoggedIn, details } = useSelector((state) => state.all);
+  const { user } = details;
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(send_login_request(formData));
@@ -72,6 +74,16 @@ function Login() {
             />
           </div>
 
+          {Object.keys(user).length > 0 && (
+            <div
+              className={clsx(
+                "mb-3 form-text fw-bold",
+                user.type === "error" ? "text-danger" : "text-success"
+              )}
+            >
+              {user.message}
+            </div>
+          )}
           <button type="submit" className="btn btn-primary" id="login-btn">
             Login
           </button>

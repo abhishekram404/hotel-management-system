@@ -44,17 +44,35 @@ export const send_check_out_request = (formData) => {
           type: "CHECK_OUT_FAILED",
           payload: data,
         });
+        clear("rooms", dispatch);
         return;
       }
       dispatch({
         type: "CHECK_OUT_SUCCESS",
         payload: data,
       });
+      // setTimeout(() => {
+      //   dispatch({
+      //     type: "CLEAR_MESSAGE",
+      //     for: "rooms",
+      //   });
+      // }, 3000);
+      // clear("rooms", dispatch);
     } catch (err) {
       dispatch({
         type: "CHECK_OUT_FAILED",
         payload: err?.response?.data,
       });
+      clear("rooms", dispatch);
     }
   };
+};
+
+const clear = (name, dispatch) => {
+  setTimeout(() => {
+    dispatch({
+      type: "CLEAR_MESSAGE",
+      for: name,
+    });
+  }, 3000);
 };
