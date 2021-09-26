@@ -11,6 +11,8 @@ import send_fetch_data_request from "./redux/actions/dashboardActions";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import NotFound from "./components/NotFound";
+import About from "./components/About";
+import Contact from "./components/Contact";
 function App() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -31,6 +33,8 @@ function App() {
         <Navbar />
         <Switch>
           <Route path="/login" component={Login} />
+          <Route path="/about" component={About} />
+          <Route path="/contact" component={Contact} />
           <ProtectedRoute exact path="/" component={Home} />
           <ProtectedRoute path="/home" component={Home} />
           <ProtectedRoute path="/admin" component={Admin} />

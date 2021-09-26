@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/sidebar.scss";
 import "../styles/admin.scss";
 import Dashboard from "./Dashboard";
@@ -13,24 +13,36 @@ import Alert from "./Alert";
 export default function Admin() {
   const dispatch = useDispatch();
 
+  const [isAlertVisible, setAlertVisible] = useState(false);
+
   const { user, dashboard, orders, customers, rooms } = useSelector(
     (state) => state.all.details
   );
 
+  // useEffect(() => {
+  //   setAlertVisible(true);
+  //   return () => {
+  //     setAlertVisible(false);
+  //   };
+  // }, [user, dashboard, orders, customers, rooms]);
+
   const [activeForm, setActiveForm] = useState({ component: CheckOut });
   return (
     <>
-      <Alert
-        message={
-          activeForm == Dashboard
-            ? dashboard.message
-            : activeForm == AddARoom
-            ? rooms.message
-            : activeForm == CheckIn
-            ? orders.message
-            : activeForm == CheckOut && "Check Out"
-        }
-      />
+      {isAlertVisible && (
+        <Alert
+          close={setAlertVisible}
+          message={
+            activeForm.component == Dashboard
+              ? dashboard.message
+              : activeForm.component == AddARoom
+              ? rooms.message
+              : activeForm.component == CheckIn
+              ? orders.message
+              : activeForm.component == CheckOut && "Check Out"
+          }
+        />
+      )}
       <div className="admin">
         <div className="sidebar p-3">
           <h3 className="text-center">Admin </h3>
@@ -100,13 +112,14 @@ const AddARoom = () => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    roomNumber: undefined,
-    capacity: undefined,
-    category: undefined,
-    price: undefined,
-    beds: undefined,
+    roomNumber: "",
+    capacity: "",
+    category: "",
+    price: "",
+    beds: "",
   });
 
+  const { rooms } = useSelector((state) => state.all.details);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -117,6 +130,13 @@ const AddARoom = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(send_room_add_request(formData));
+    setFormData({
+      roomNumber: "",
+      capacity: "",
+      category: "",
+      price: "",
+      beds: "",
+    });
   };
 
   return (
@@ -193,6 +213,16 @@ const AddARoom = () => {
             required={true}
           />
         </div>
+        {Object.keys(rooms).length > 0 && (
+          <div
+            className={clsx(
+              "mb-3 form-text fw-bold",
+              rooms.type === "error" ? "text-danger" : "text-success"
+            )}
+          >
+            {rooms.message}
+          </div>
+        )}
         <div className="mb-3">
           <button type="submit" className="btn btn-primary float-end">
             Update
