@@ -11,7 +11,6 @@ export default function Alert({ message }) {
       ></button>
       <div className="alert">
         <div className="header">
-          {/* <img src="..." className="rounded me-2" alt="..." /> */}
           <strong className="bg-light me-auto text-success">
             Hotel Management System
           </strong>
