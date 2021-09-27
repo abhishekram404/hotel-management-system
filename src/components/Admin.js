@@ -196,7 +196,7 @@ const AddARoom = () => {
         )}
         <div className="mb-3">
           <button type="submit" className="btn btn-primary float-end">
-            Update
+            Add room
           </button>
         </div>
       </form>

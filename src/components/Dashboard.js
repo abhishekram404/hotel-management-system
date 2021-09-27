@@ -15,11 +15,6 @@ export default function Dashboard() {
   const findRoomById = (_id) => {
     return rooms.filter((room) => room._id === _id)[0];
   };
-  useEffect(() => {
-    // if (rooms.length && orders.length && customers.length && employees.length) {
-    //   setLoading(false);
-    // }
-  });
 
   return (
     <>
@@ -75,7 +70,7 @@ export default function Dashboard() {
                   >
                     <th scope="row">{index + 1}</th>
                     <td>{room.roomNumber}</td>
-                    <td>{room.capacity}</td>
+                    <td>{room.capacity}</td>  
                     <td>${room.price}</td>
                     <td>{room.beds}</td>
                     <td>{room.isBooked ? "No" : "Yes"}</td>

@@ -207,23 +207,7 @@ router.post("/check-out", auth, async (req, res) => {
   }
 });
 
-// {
-//    "firstName": "Abhishek",
-//       "lastName": "Ram" ,
-//       "address" : "Balkumari",
-//       "country": "Nepal",
-//       "email": "abhishekram@gmail.com",
-//       "phone": "1234567890",
-//       "company": "C company",
-//       "idType": "citizenship",
-//       "idNumber": "12345",
-//       "roomNumber": [100,101],
-//       "dateIn": "2020-11-22",
-//       "dateOut": "2020-11-23",
-//       "numberOfAdults": 3,
-//       "numberOfChildren": 0,
-//       "notes": "",
-// }
+
 
 router.post("/login", async (req, res) => {
   try {
