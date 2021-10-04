@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import "../styles/dashboard.scss";
 import { useSelector } from "react-redux";
 import moment from "moment";
@@ -25,23 +24,22 @@ export default function Dashboard() {
           <h4>Dashboard</h4>
           <hr />
           <div className="row ">
-            <div className="col border mx-2 p-3 bg-info text-light rounded shadow">
+            <div className="col border mx-2 p-3 bg-light text-dark rounded shadow">
               <h4>Rooms</h4>
               Total rooms : {rooms.length} <br />
               Available : {rooms.filter((room) => !room.isBooked).length}
             </div>
-            <div className="col border mx-2 p-3 bg-success text-light rounded shadow">
+            <div className="col border mx-2 p-3 bg-light text-dark rounded shadow">
               <h4>Orders</h4>
               Total orders : {orders.length} <br />
               Completed orders :{" "}
               {orders.filter((order) => order.completed).length}
             </div>
-            <div className="col border mx-2 p-3 bg-warning text-light rounded shadow">
+            <div className="col border mx-2 p-3 bg-light text-dark rounded shadow">
               <h4>Customers</h4>
               Total customers : {customers.length} <br />
-              Happy : 0
             </div>
-            <div className="col border mx-2 p-3 bg-light rounded shadow">
+            <div className="col border mx-2 p-3 bg-light text-dark rounded shadow">
               <h4>Employees</h4>
               Total employees : {employees.length}
             </div>
@@ -55,10 +53,10 @@ export default function Dashboard() {
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Room Number</th>
-                <th scope="col">Capacity</th>
+                <th scope="col" className='text-center'>Capacity</th>
                 <th scope="col">Price</th>
-                <th scope="col">No. of beds</th>
-                <th scope="col">Available </th>
+                <th scope="col" className='text-center'>No. of beds</th>
+                <th scope="col" className='text-center'>Available </th>
               </tr>
             </thead>
             <tbody>
@@ -70,10 +68,10 @@ export default function Dashboard() {
                   >
                     <th scope="row">{index + 1}</th>
                     <td>{room.roomNumber}</td>
-                    <td>{room.capacity}</td>  
-                    <td>${room.price}</td>
-                    <td>{room.beds}</td>
-                    <td>{room.isBooked ? "No" : "Yes"}</td>
+                    <td className='text-center'>{room.capacity}</td>  
+                    <td>Rs. {room.price}</td>
+                    <td className='text-center'>{room.beds}</td>
+                    <td className='text-center'>{room.isBooked ? "No" : "Yes"}</td>
                   </tr>
                 );
               })}
@@ -88,12 +86,12 @@ export default function Dashboard() {
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Customer's name</th>
-                <th scope="col">Room Number</th>
+                <th scope="col" className='text-center'>Room Number</th>
                 <th scope="col">Date In</th>
                 <th scope="col">Date Out</th>
-                <th scope="col">No. of adults</th>
-                <th scope="col">No. of children </th>
-                <th scope="col">Checked Out </th>
+                <th scope="col" className='text-center'>No. of adults</th>
+                <th scope="col" className='text-center'>No. of children </th>
+                <th scope="col" className='text-center'>Checked Out </th>
               </tr>
             </thead>
             <tbody>
@@ -163,15 +161,14 @@ export default function Dashboard() {
                 return (
                   <tr
                     key={customer._id}
-                    // className={order.completed ? "table-danger" : "table-success"}
                   >
                     <th scope="row">{index + 1}</th>
                     <td>
                       {customer.firstName} {customer.lastName}
                     </td>
                     <td className="text-center">{customer.phone}</td>
-                    <td>{customer.address}</td>
-                    <td>{customer.country}</td>
+                    <td className='text-center'>{customer.address}</td>
+                    <td className='text-center'>{customer.country}</td>
                     <td className="text-center">{customer.company}</td>
                     <td className="text-center">{customer.idType}</td>
                     <td className="text-center">{customer.idNumber}</td>
@@ -218,7 +215,6 @@ export default function Dashboard() {
                 return (
                   <tr
                     key={employees._id}
-                    // className={order.completed ? "table-danger" : "table-success"}
                   >
                     <th scope="row">{index + 1}</th>
                     <td>{employee.name}</td>

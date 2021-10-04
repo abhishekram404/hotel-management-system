@@ -15,9 +15,9 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
             <Redirect
               to={{
                 pathname: "/login",
-                state: {
-                  prevLocation: props.location,
-                },
+                // state: {
+                //   prevLocation: props.location,
+                // },
               }}
             />
           );

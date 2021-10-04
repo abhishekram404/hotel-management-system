@@ -10,9 +10,9 @@ export default function Navbar() {
   const { isUserLoggedIn } = useSelector((state) => state.all);
   return (
     <nav className="navbar  px-4 py-3">
-      <a href="#" className="navbar-brand">
+      <Link to="/" className="navbar-brand">
         Hotel Management System
-      </a>
+      </Link>
       <div className="nav">
         {isUserLoggedIn ? (
           <>
