@@ -43,9 +43,3 @@ After the dependencies are installed, run `npm start` to start the backend serve
 
 
 
-
----
-## Authors 
-- Alit Shahi
-- Sanandan Lal Kayasth
-- Puspa Raj Paneru
